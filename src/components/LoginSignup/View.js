@@ -8,41 +8,45 @@ import GoogleAuth from "../../container/GoogleAuth/GoogleAuth";
 import FacebookAuth from "../../container/FacebookAuth/FacebookAuth";
 
 export default ({ submit, formInput, title }) => (
-  <View
+  <ScrollView
     style={{
       flexGrow: 1
     }}
+    contentContainerStyle={{ flex: 1 }}
+    keyboardDismissMode="interactive"
   >
     <View
       style={{
-        flex: 1,
-        width: "90%",
-        marginLeft: "auto",
-        marginRight: "auto"
+        justifyContent: "center",
+        alignItems: "center",
+        flex: 2
       }}
     >
-      <HeaderButton title={title} />
+      <Form submit={submit} formInput={formInput} ButtonTitle="Signup" />
     </View>
-    <ScrollView
+    <View
       style={{
-        flexGrow: 1
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row"
       }}
-      contentContainerStyle={{ flex: 1 }}
-      keyboardDismissMode="interactive"
     >
-      <View
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-          flex: 1
-        }}
-      >
-        <Form submit={submit} formInput={formInput} ButtonTitle="Signup" />
-      </View>
-    </ScrollView>
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <GoogleAuth />
       <FacebookAuth />
     </View>
-  </View>
+  </ScrollView>
 );
+
+{
+  /* <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        
+      }}
+    >
+      <HeaderButton title={title} />
+    </View> */
+}

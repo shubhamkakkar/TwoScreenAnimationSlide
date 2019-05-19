@@ -1,12 +1,17 @@
 import React from "react";
-import { View, Text, Animated, Dimensions, PanResponder } from "react-native";
+import {
+  View,
+  Text,
+  Animated,
+  Dimensions,
+  PanResponder,
+  TouchableOpacity
+} from "react-native";
 
 import PropTypes from "prop-types";
 
 // import { Haptic } from "expo";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen");
-
-const SWIPE_THRESHOLD = 180;
 
 class SliderAnimation extends React.PureComponent {
   constructor(props) {
@@ -16,24 +21,35 @@ class SliderAnimation extends React.PureComponent {
     this.WIDTH_LEFT = SCREEN_WIDTH * leftScreenRatio;
     this.WIDTH_RIGHT = SCREEN_WIDTH * rightScreenRatio;
     this.SLIDER_POSITION_TOP = SCREEN_HEIGHT * sliderTopRatio;
-
+    this.SWIPE_THRESHOLD = SCREEN_WIDTH / 2;
     this._widthLeft = new Animated.Value(this.WIDTH_LEFT);
     this._widthRight = new Animated.Value(this.WIDTH_RIGHT);
+
+    this._opacityLeft = new Animated.Value(1);
+    this._opacityRight = new Animated.Value(0);
 
     this._position = new Animated.ValueXY();
     this.state = {
       recentWidthLeft: this.WIDTH_LEFT,
       recentWidthRight: this.WIDTH_RIGHT,
       showRightContent: false,
-      showLeftContent: false
+      showLeftContent: true
     };
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => true,
       onPanResponderMove: (evt, gesture) => {
-        this.setState({
-          showLeftContent: false,
-          showRightContent: false
-        });
+        if (this.state.showLeftContent) {
+          Animated.timing(this._opacityLeft, {
+            toValue: 0,
+            duration: 400
+          }).start(() => this.setState({ showLeftContent: false }));
+        }
+        if (this.state.showRightContent) {
+          Animated.timing(this._opacityRight, {
+            toValue: 0,
+            duration: 400
+          }).start(() => this.setState({ showRightContent: false }));
+        }
         Animated.parallel([
           Animated.timing(this._widthLeft, {
             toValue: gesture.moveX,
@@ -46,20 +62,23 @@ class SliderAnimation extends React.PureComponent {
         ]).start();
       },
       onPanResponderRelease: (event, gesture) => {
-        console.log(gesture.dx);
-        // if (gesture.dx < SWIPE_THRESHOLD) {
-        //   this.forceSwipe("right");
-        // } else if (-gesture.dx > SWIPE_THRESHOLD) {
-        //   this.forceSwipe("left");
-        // } else {
-        //   this.resetPosition();
-        // }
+        if (gesture.dx > 0) {
+          if (gesture.dx < this.state.recentWidthRight) {
+            this.forceSwipe("right");
+          } else {
+            this.resetPosition();
+          }
+        }
+        if (gesture.dx < 0) {
+          if (-gesture.dx > this.state.recentWidthLeft / 2) {
+            this.forceSwipe("left");
+          } else {
+            this.resetPosition();
+            return 0;
+          }
+        }
       }
     });
-  }
-
-  componentDidUpdate() {
-    console.log(this.state);
   }
 
   resetPosition = () => {
@@ -72,7 +91,6 @@ class SliderAnimation extends React.PureComponent {
     if (showRightContent) {
       this.setState({ showRightContent: true });
     }
-    console.log("reset position");
     Animated.parallel([
       Animated.spring(this._widthLeft, {
         toValue: recentWidthLeft
@@ -85,10 +103,17 @@ class SliderAnimation extends React.PureComponent {
 
   forceSwipe = direction => {
     if (direction === "left") {
-      this.setState({
-        showLeftContent: false,
-        showRightContent: false
-      });
+      this.setState(
+        {
+          showRightContent: true
+        },
+        () => {
+          Animated.timing(this._opacityRight, {
+            toValue: 1,
+            duration: 200
+          }).start();
+        }
+      );
       Animated.parallel([
         Animated.spring(this._widthLeft, {
           toValue: this.WIDTH_RIGHT
@@ -101,15 +126,22 @@ class SliderAnimation extends React.PureComponent {
       ]).start(() =>
         this.setState({
           recentWidthLeft: this.WIDTH_RIGHT,
-          recentWidthRight: this.WIDTH_LEFT,
-          showRightContent: true
+          recentWidthRight: this.WIDTH_LEFT
         })
       );
     } else if (direction === "right") {
-      this.setState({
-        showLeftContent: false,
-        showRightContent: false
-      });
+      this.setState(
+        {
+          showLeftContent: true
+        },
+        () => {
+          Animated.timing(this._opacityLeft, {
+            toValue: 1,
+            duration: 200
+          }).start();
+        }
+      );
+
       Animated.parallel([
         Animated.spring(this._widthLeft, {
           toValue: this.WIDTH_LEFT
@@ -122,18 +154,13 @@ class SliderAnimation extends React.PureComponent {
       ]).start(() =>
         this.setState({
           recentWidthLeft: this.WIDTH_LEFT,
-          recentWidthRight: this.WIDTH_RIGHT,
-          showLeftContent: true
+          recentWidthRight: this.WIDTH_RIGHT
         })
       );
     } else {
       this.resetPosition();
     }
   };
-
-  componentDidUpdate() {
-    console.log(this.state);
-  }
 
   render() {
     const { comp } = this.props;
@@ -150,30 +177,53 @@ class SliderAnimation extends React.PureComponent {
           <View
             style={{
               flex: 1,
-              backgroundColor: "#beeef7",
-              justifyContent: "center",
-              alignItems: "center"
+              backgroundColor: "#beeef7"
             }}
           >
-            <View>{this.state.showLeftContent ? comp[0] : null}</View>
+            <View
+              style={{
+                flex: 1
+              }}
+            >
+              {this.state.showLeftContent ? (
+                <Animated.View
+                  style={{
+                    opacity: this._opacityLeft,
+                    flex: 1
+                    // justifyContent: "center",
+                    // alignItems: "center",
+                  }}
+                >
+                  {comp[0]}
+                </Animated.View>
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <Text>left</Text>
+                </View>
+              )}
+            </View>
           </View>
         </Animated.View>
         <Animated.View
           scrollEventThrottle={1}
           style={{
             flexGrow: 1,
+            backgroundColor: "#D2F3E0",
             width: this._widthRight
           }}
         >
           <View
             style={{
-              flex: 1,
-              backgroundColor: "#D2F3E0",
-              justifyContent: "center",
-              alignItems: "center"
+              flex: 1
             }}
           >
-            <View
+            <Animated.View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -190,8 +240,37 @@ class SliderAnimation extends React.PureComponent {
               <Text style={{ fontWeight: "bold", color: "white" }}>
                 &#60;-&#62;
               </Text>
+            </Animated.View>
+            <View
+              style={{
+                flex: 1,
+                // justifyContent: "center"
+                alignItems: "center"
+              }}
+            >
+              {this.state.showRightContent ? (
+                <Animated.View
+                  style={{
+                    opacity: this._opacityRight,
+                    // justifyContent: "center",
+                    // alignItems: "center",
+                    flex: 1
+                  }}
+                >
+                  {comp[1]}
+                </Animated.View>
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <Text>Right</Text>
+                </View>
+              )}
             </View>
-            <View>{this.state.showRightContent ? comp[1] : null}</View>
           </View>
         </Animated.View>
       </View>

@@ -1,6 +1,8 @@
 import React from "react";
 import SignupView from "../../components/LoginSignup/View";
 
+import { View } from "react-native";
+
 export default class LoginScreen extends React.Component {
   state = {
     formInput: [
@@ -37,11 +39,13 @@ export default class LoginScreen extends React.Component {
 
   render() {
     return (
-      <SignupView
-        formInput={this.state.formInput}
-        submit={this.loginSubmit}
-        title="Login"
-      />
+      <View style={{ flex: 1 }}>
+        <SignupView
+          formInput={this.state.formInput}
+          submit={this.loginSubmit}
+          title="Login"
+        />
+      </View>
     );
   }
 }
