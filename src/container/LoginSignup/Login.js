@@ -7,13 +7,16 @@ export default class LoginScreen extends React.Component {
   state = {
     formInput: [
       {
-        label: "Name"
+        label: "Name",
+        placeholder: "john snow"
       },
       {
-        label: "Email"
+        label: "Email",
+        placeholder: "johnsnow@got.com"
       },
       {
-        label: "Password"
+        label: "Password",
+        placeholder: ""
       }
     ],
     credentials: {}

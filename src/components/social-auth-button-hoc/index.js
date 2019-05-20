@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default props => (
@@ -12,10 +12,11 @@ export default props => (
       backgroundColor: "#007aff",
       borderRadius: 25,
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
+      borderColor: "#007aff"
     }}
     onPress={() => props.handelAuth()}
   >
-    <FontAwesome name={props.name} size={20} color="white" />
+    <FontAwesome name={props.name} size={20} color="#fff" />
   </TouchableOpacity>
 );

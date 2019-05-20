@@ -17,12 +17,12 @@ export default ({ submit, formInput, title }) => (
   >
     <View
       style={{
-        justifyContent: "center",
-        alignItems: "center",
+        // justifyContent: "center",
+        // alignItems: "center",
         flex: 2
       }}
     >
-      <Form submit={submit} formInput={formInput} ButtonTitle="Signup" />
+      <Form submit={submit} formInput={formInput} ButtonTitle={title} />
     </View>
     <View
       style={{

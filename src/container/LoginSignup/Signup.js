@@ -6,16 +6,20 @@ export default class SignupScreen extends React.Component {
   state = {
     formInput: [
       {
-        label: "Name"
+        label: "Name",
+        placeholder: "john snow"
       },
       {
-        label: "Email"
+        label: "Email",
+        placeholder: "johnsnow@got.com"
       },
       {
-        label: "Password"
+        label: "Password",
+        placeholder: ""
       },
       {
-        label: "Confirm Password"
+        label: "Confirm Password",
+        placeholder: ""
       }
     ],
     credentials: {}
@@ -53,7 +57,7 @@ export default class SignupScreen extends React.Component {
       <SignupView
         formInput={this.state.formInput}
         submit={this.signupSubmit}
-        title="Singup"
+        title="Sing Up"
       />
     );
   }

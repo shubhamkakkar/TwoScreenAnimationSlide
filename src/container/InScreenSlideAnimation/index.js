@@ -10,7 +10,6 @@ import {
 
 import PropTypes from "prop-types";
 
-// import { Haptic } from "expo";
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen");
 
 class SliderAnimation extends React.PureComponent {
@@ -176,8 +175,7 @@ class SliderAnimation extends React.PureComponent {
         >
           <View
             style={{
-              flex: 1,
-              backgroundColor: "#beeef7"
+              flex: 1
             }}
           >
             <View
@@ -190,8 +188,6 @@ class SliderAnimation extends React.PureComponent {
                   style={{
                     opacity: this._opacityLeft,
                     flex: 1
-                    // justifyContent: "center",
-                    // alignItems: "center",
                   }}
                 >
                   {comp[0]}
@@ -200,12 +196,9 @@ class SliderAnimation extends React.PureComponent {
                 <View
                   style={{
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center"
+                    backgroundColor: "#eee"
                   }}
-                >
-                  <Text>left</Text>
-                </View>
+                />
               )}
             </View>
           </View>
@@ -214,32 +207,44 @@ class SliderAnimation extends React.PureComponent {
           scrollEventThrottle={1}
           style={{
             flexGrow: 1,
-            backgroundColor: "#D2F3E0",
-            width: this._widthRight
+            // borderLeftColor: "#007aff",
+            // borderLeftWidth: 1,
+            width: this._widthRight,
+            backgroundColor: this.state.showRightContent ? "white" : "#eee"
           }}
         >
           <View
             style={{
-              flex: 1
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center"
             }}
           >
             <Animated.View
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                borderRadius: 50,
-                height: 50,
-                width: 50,
+                borderRadius: 25,
+                height: 25,
+                width: 25,
                 position: "absolute",
-                left: -25,
+                left: -12.5,
                 top: this.SLIDER_POSITION_TOP,
-                backgroundColor: "#6c5ce7"
+                backgroundColor: "#f34573",
+                zIndex: 10
               }}
               {...this._panResponder.panHandlers}
             >
-              <Text style={{ fontWeight: "bold", color: "white" }}>
-                &#60;-&#62;
-              </Text>
+              <View
+                style={{
+                  fontWeight: "bold",
+                  color: "white",
+                  borderRadius: 10,
+                  height: 10,
+                  width: 10,
+                  backgroundColor: "white"
+                }}
+              />
             </Animated.View>
             <View
               style={{
@@ -263,12 +268,9 @@ class SliderAnimation extends React.PureComponent {
                 <View
                   style={{
                     flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center"
+                    backgroundColor: "white"
                   }}
-                >
-                  <Text>Right</Text>
-                </View>
+                />
               )}
             </View>
           </View>
@@ -284,8 +286,8 @@ SliderAnimation.propTypes = {
   sliderTopRatio: PropTypes.number
 };
 SliderAnimation.defaultProps = {
-  leftScreenRatio: 0.6,
-  rightScreenRatio: 0.4,
-  sliderTopRatio: 0.75
+  leftScreenRatio: 0.8,
+  rightScreenRatio: 0.2,
+  sliderTopRatio: 0.77
 };
 export default SliderAnimation;
