@@ -6,6 +6,6 @@ Animation are an important part of our application and implementing them in reac
 
 <p> There exist various animations but a few are becoming quite popular these days, and this mockup shows one of them, which I implemented in reactnative </p>
 
-<img src="./screenshorts/right.png"  alt="scrren right" />
-<img src="./screenshorts/intermediate.png"  alt="scrren" />
-<img src="./screenshorts/left.png"  alt="scrren left" />
+<img src="./screenshorts/right.png"  style=" height: 100px; width: 100px " alt="scrren right" />
+<img src="./screenshorts/intermediate.png"  style=" height: 100px; width: 100px " alt="scrren" />
+<img src="./screenshorts/left.png"  style=" height: 100px; width: 100px " alt="scrren left" />
